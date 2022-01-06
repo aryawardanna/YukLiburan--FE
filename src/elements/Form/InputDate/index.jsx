@@ -1,14 +1,14 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import propTypes from 'prop-types';
 
-import { DataRange } from 'react-date-range';
+import { DateRange } from 'react-date-range';
 
 import './index.scss';
-import 'react-date-range/dist/styles.css';
-import 'react-date-range/dist/theme/default.css';
+import 'react-date-range/dist/styles.css'; // main css file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
 import formatDate from 'utils/formatDate';
-import iconCalender from 'assets/image/ic_calender';
+import iconCalendar from 'assets/image/icons/ic_calendar.svg';
 
 export default function Date(props) {
   const { value, placeholder, name } = props;
@@ -18,7 +18,7 @@ export default function Date(props) {
     const target = {
       target: {
         value: value.selection,
-        name,
+        name: name,
       },
     };
     props.onChange(target);
@@ -30,7 +30,7 @@ export default function Date(props) {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  });
 
   const refDate = useRef(null);
   const handleClickOutside = (event) => {
@@ -45,9 +45,42 @@ export default function Date(props) {
 
   const displayDate = `${value.startDate ? formatDate(value.startDate) : ''}${
     value.endDate ? ' - ' + formatDate(value.endDate) : ''
-  } `;
+  }`;
 
-  return <div></div>;
+  return (
+    <div
+      ref={refDate}
+      className={['input-date mb-3', props.outerClassName].join(' ')}
+    >
+      <div className="input-group">
+        <div className="input-group-prepend bg-gray-900">
+          <span className="input-group-text">
+            <img src={iconCalendar} alt="icon calendar" />
+          </span>
+        </div>
+        <input
+          readOnly
+          type="text"
+          className="form-control"
+          value={displayDate}
+          placeholder={placeholder}
+          onClick={() => setIsShowed(!isShowed)}
+        />
+
+        {isShowed && (
+          <div className="date-range-wrapper">
+            <DateRange
+              editableDateInputs={true}
+              onChange={datePickerChange}
+              moveRangeOnFirstSelection={false}
+              onRangeFocusChange={check}
+              ranges={[value]}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 Date.propTypes = {

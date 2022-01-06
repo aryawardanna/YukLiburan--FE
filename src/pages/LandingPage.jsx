@@ -13,6 +13,11 @@ export default class LandingPage extends Component {
     super(props);
     this.refMostPicked = createRef();
   }
+
+  componentDidMount() {
+    window.title = 'LiburanYuk! | Home';
+    window.scrollTo(0, 0);
+  }
   render() {
     return (
       <>
